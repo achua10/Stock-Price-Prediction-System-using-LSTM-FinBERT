@@ -154,3 +154,16 @@ Create your feature branch
 Commit changes
 
 Open a Pull Request
+
+
+
+DEMO PICTURES :
+
+<img width="497" height="566" alt="image" src="https://github.com/user-attachments/assets/fdf5df99-b930-48a9-8db9-14fd20553638" />
+
+<img width="470" height="436" alt="image" src="https://github.com/user-attachments/assets/38d0140f-222d-4670-972b-867752e9af27" />
+
+<img width="467" height="483" alt="image" src="https://github.com/user-attachments/assets/2f39aa91-b068-4f8c-8cb6-a69e006cc8bf" />
+
+
+
