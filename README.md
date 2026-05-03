@@ -1,163 +1,165 @@
-Stock Price Prediction using LSTM
+# Stock Price Prediction System using LSTM & FinBERT
 
-A deep learning project that predicts stock prices using an LSTM (Long Short-Term Memory) neural network. This model learns patterns from historical stock data to forecast future price movements.
+A deep learning application that predicts stock price trends using a stacked LSTM neural network and performs real-time news sentiment analysis using FinBERT to generate BUY / HOLD / SELL recommendations.
 
-🚀 Project Overview
+Built with Streamlit for an interactive web interface, pulling live market data via yfinance and financial news from NewsAPI and MarketAux.
 
-Stock markets are highly dynamic and influenced by multiple factors. Traditional models struggle to capture time-based dependencies, which is where LSTM networks excel.
+---
 
-This project:
+## Features
 
-✔ Uses historical stock price data
-✔ Applies preprocessing & scaling
-✔ Trains an LSTM-based neural network
-✔ Predicts future stock prices
-✔ Visualizes actual vs predicted values
+- **LSTM Price Prediction** — 4-layer stacked LSTM model trained on 15 years of historical closing price data, predicting future price direction against actual values
+- **Moving Average Charts** — 100-day and 200-day moving averages plotted alongside closing price for trend context
+- **Model Evaluation Metrics** — RMSE, MAE, and R² score displayed after each prediction run
+- **News Sentiment Analysis** — Aggregates recent financial news from two sources (NewsAPI + MarketAux), runs each article through FinBERT, and produces an overall BUY / HOLD / SELL signal
+- **Any Ticker** — Works with any valid stock symbol (AAPL, TSLA, MSFT, NVDA, etc.)
 
-🧠 Why LSTM?
+---
 
-LSTM networks are designed for time series forecasting because they:
+## Tech Stack
 
-• Capture long-term dependencies
-• Handle sequential data effectively
-• Reduce vanishing gradient problems
-• Work well for financial datasets
+| Layer | Technology |
+|---|---|
+| Frontend / UI | Streamlit |
+| Deep Learning | Keras / TensorFlow |
+| NLP / Sentiment | FinBERT (ProsusAI/finbert) via HuggingFace |
+| Market Data | yfinance |
+| News Data | NewsAPI, MarketAux |
+| Data Processing | NumPy, Pandas, scikit-learn |
+| Visualisation | Matplotlib |
 
-🛠 Tech Stack
+---
 
-Python
+## Project Structure
 
-NumPy
-
-Pandas
-
-Matplotlib
-
-Scikit-learn
-
-TensorFlow / Keras
-
-📊 Dataset
-
-The model uses historical stock data containing:
-
-Open Price
-
-High Price
-
-Low Price
-
-Close Price
-
-Volume
-
-Data Source Example:
-
-• Yahoo Finance
-• Kaggle datasets
-• CSV historical data
-
-⚙️ Model Architecture
-
-Typical LSTM model pipeline:
-
-Data Cleaning & Preprocessing
-
-Feature Scaling (MinMaxScaler)
-
-Creating Time Sequences
-
-LSTM Layers
-
-Dense Output Layer
-
-Prediction & Visualization
-
-Example Structure:
-
-Input → LSTM → LSTM → Dense → Output
-
-📦 Installation
-
-Clone the repository:
-
-git clone https://github.com/yourusername/stock-lstm-prediction.git
-cd stock-lstm-prediction
-
-
-Install dependencies:
-
-pip install -r requirements.txt
-
-▶️ Usage
-
-Run the notebook or script:
-
-python stock_prediction.py
-
-
-Or open:
-
-Stock_Prediction.ipynb
-
-📈 Results
-
-The model outputs:
-
-✔ Predicted stock prices
-✔ Comparison graph (Actual vs Predicted)
-
-Visualization Example:
-
-Trend learning
-
-Prediction smoothing
-
-Error analysis
-
-📁 Project Structure
-├── data/
-│   └── stock_data.csv
+```
+Stock-Price-Prediction-System-using-LSTM-FinBERT/
+├── app.py                  # Main Streamlit application
+├── ml_api.py               # Flask REST API (model + sentiment endpoints)
+├── test_.py                # Offline model evaluation script
+├── requirements.txt        # Python dependencies
+├── README.md
+├── .gitignore
+├── .gitattributes          # Git LFS config for model files
 ├── models/
-│   └── trained_model.h5
-├── stock_prediction.py
-├── Stock_Prediction.ipynb
-├── requirements.txt
-└── README.md
+│   └── keras_model1.keras  # Trained LSTM model (Git LFS)
+└── notebooks/
+    ├── train_model.ipynb   # Full training pipeline
+    └── eda_scratch.ipynb   # Exploratory data analysis
+```
 
-🔮 Future Improvements
+---
 
-Possible enhancements:
+## Getting Started
 
-• Add Technical Indicators (RSI, MACD, etc.)
-• Multi-feature prediction
-• Hyperparameter tuning
-• Real-time stock API integration
-• Deployment as web app/dashboard
-• Try GRU / Transformer models
+### Prerequisites
+- Python 3.9+
+- Git LFS (for downloading the model file)
 
-⚠️ Disclaimer
+### 1. Clone the repository
 
-This project is for educational purposes only.
+```bash
+git lfs install
+git clone https://github.com/achua10/Stock-Price-Prediction-System-using-LSTM-FinBERT.git
+cd Stock-Price-Prediction-System-using-LSTM-FinBERT
+```
 
-Stock market predictions are inherently uncertain.
-Do NOT use this model for financial decisions.
+> Git LFS is required to pull the `.keras` model file. Without `git lfs install` first, the model file will download as a pointer file and the app will fail to load.
 
-🤝 Contributing
+### 2. Create a virtual environment
 
-Contributions are welcome!
+```bash
+python -m venv venv
 
-Fork the repo
+# Windows
+venv\Scripts\activate
 
-Create your feature branch
+# macOS / Linux
+source venv/bin/activate
+```
 
-Commit changes
+### 3. Install dependencies
 
-Open a Pull Request
+```bash
+pip install -r requirements.txt
+```
 
+### 4. Set up API keys
 
+Create a `.streamlit/secrets.toml` file in the project root:
 
-DEMO PICTURES :
+```toml
+NEWS_API_KEY = "your_newsapi_key_here"
+MARKETAUX_KEY = "your_marketaux_key_here"
+```
+
+- Get a free NewsAPI key at [newsapi.org](https://newsapi.org)
+- Get a free MarketAux key at [marketaux.com](https://marketaux.com)
+
+> This file is in `.gitignore` and will never be committed.
+
+### 5. Run the app
+
+```bash
+streamlit run app.py
+```
+
+The app will open at `http://localhost:8501`.
+
+---
+
+## Model Architecture
+
+The LSTM model is a 4-layer stacked network trained on 70% of historical closing price data (2010 – present) with a 100-day sliding window.
+
+| Layer | Units | Dropout |
+|---|---|---|
+| LSTM 1 | 50 | 0.2 |
+| LSTM 2 | 60 | 0.3 |
+| LSTM 3 | 80 | 0.3 |
+| LSTM 4 | 120 | 0.5 |
+| Dense output | 1 | — |
+
+- Optimizer: Adam
+- Loss: Mean Squared Error
+- Epochs: 50
+- Input: 100-day sliding window of normalised closing prices
+
+To retrain the model on new data, open `notebooks/train_model.ipynb` and run all cells.
+
+---
+
+## Offline Model Evaluation
+
+To evaluate model performance without the Streamlit UI:
+
+```bash
+python test_.py
+```
+
+This downloads fresh data, runs predictions, and prints RMSE, MAE, R² score, and directional accuracy (% of up/down moves predicted correctly).
+
+---
+
+## REST API (Optional)
+
+A Flask API is included in `ml_api.py` for integrating predictions into other applications.
+
+```bash
+python ml_api.py
+```
+
+Endpoints:
+
+| Method | Endpoint | Body | Returns |
+|---|---|---|---|
+| POST | `/predict` | `{"ticker": "AAPL"}` | Predicted next price |
+| POST | `/sentiment` | `{"ticker": "AAPL"}` | Sentiment label |
+
+---
+
+## Screenshots
+
 
 <img width="497" height="566" alt="image" src="https://github.com/user-attachments/assets/fdf5df99-b930-48a9-8db9-14fd20553638" />
 
@@ -165,5 +167,20 @@ DEMO PICTURES :
 
 <img width="467" height="483" alt="image" src="https://github.com/user-attachments/assets/2f39aa91-b068-4f8c-8cb6-a69e006cc8bf" />
 
+
+---
+
+## Limitations
+
+- The LSTM model predicts price **trend direction**, not exact future prices — it should not be used as sole basis for financial decisions
+- NewsAPI free tier limits requests to articles from the past 30 days
+- Model was trained on TSLA data — accuracy will vary across different stocks and market conditions
+- Sentiment analysis reflects news tone, not market fundamentals
+
+---
+
+## License
+
+This project is for educational purposes. Not financial advice.
 
 
