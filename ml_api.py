@@ -7,7 +7,7 @@ import numpy as np
 app = Flask(__name__)
 
 # Load your model
-model = load_model('keras_model1.keras')  # make sure file is in same folder
+model = load_model('models/keras_model1.keras')
 finbert = pipeline("sentiment-analysis", model="ProsusAI/finbert")
 
 @app.route('/predict', methods=['POST'])
