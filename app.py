@@ -272,3 +272,5 @@ if st.button("Analyze News Sentiment"):
 
     except Exception as e:
         st.error(f"Error fetching or analyzing news: {e}")
+
+        #just for testing
